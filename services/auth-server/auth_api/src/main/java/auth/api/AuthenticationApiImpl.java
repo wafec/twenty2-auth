@@ -8,6 +8,7 @@ import auth.entities.User;
 import auth.shared.api.AuthenticationApi;
 import auth.shared.dto.AuthorizationDto;
 import auth.shared.dto.UserAndPasswordDto;
+import auth.shared.exceptions.TokenGenerationException;
 import auth.shared.exceptions.UserNotFoundException;
 import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
@@ -30,7 +31,8 @@ public class AuthenticationApiImpl implements AuthenticationApi {
 
     @GetMapping( "/authenticate" )
     @Override
-    public AuthorizationDto authenticate( UserAndPasswordDto userAndPassword ) throws UserNotFoundException {
+    public AuthorizationDto authenticate( UserAndPasswordDto userAndPassword )
+            throws UserNotFoundException, TokenGenerationException {
         User user = userDao.findByNameAndPassword( userAndPassword.getUser(), userAndPassword.getPassword() );
 
         if ( user == null ) {

@@ -10,8 +10,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web:2.6.7'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.6.4'
     implementation 'joda-time:joda-time:2.10.14'
-    implementation 'org.bouncycastle:bcprov-jdk15on:1.70'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.2.2'
+    implementation 'com.google.guava:guava:31.1-jre'
 
     runtimeOnly 'mysql:mysql-connector-java'
 }

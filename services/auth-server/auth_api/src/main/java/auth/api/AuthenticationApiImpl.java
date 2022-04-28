@@ -22,12 +22,20 @@ import java.util.Date;
 @RestController
 @RequestMapping( "/authentication" )
 public class AuthenticationApiImpl implements AuthenticationApi {
+    private final UserDao userDao;
+    private final TokenBuilder tokenBuilder;
+    private final AuthorizationDao authorizationDao;
+
     @Autowired
-    private UserDao userDao;
-    @Autowired
-    private TokenBuilder tokenBuilder;
-    @Autowired
-    private AuthorizationDao authorizationDao;
+    public AuthenticationApiImpl(
+            UserDao userDao,
+            TokenBuilder tokenBuilder,
+            AuthorizationDao authorizationDao
+    ) {
+        this.userDao = userDao;
+        this.tokenBuilder = tokenBuilder;
+        this.authorizationDao = authorizationDao;
+    }
 
     @GetMapping( "/authenticate" )
     @Override

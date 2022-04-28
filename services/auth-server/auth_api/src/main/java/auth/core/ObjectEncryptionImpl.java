@@ -1,6 +1,7 @@
 package auth.core;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.io.Resources;
 import lombok.SneakyThrows;
 import org.bouncycastle.util.io.pem.PemObject;
 import org.bouncycastle.util.io.pem.PemReader;
@@ -17,20 +18,32 @@ import java.security.KeyFactory;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
+import java.util.Optional;
 
 @Component
 public class ObjectEncryptionImpl implements ObjectEncryption {
-    @Value("${public-key-pem-file}")
-    private String publicKeyPemFile;
     private RSAPublicKey publicKey;
-    @Autowired
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
-    public ObjectEncryptionImpl() throws GeneralSecurityException, IOException {
-        loadPublicKey();
+    private static final String RSA_PUBLIC_RESOURCE_PATH = "core/rsa.public";
+
+    @Autowired
+    public ObjectEncryptionImpl(
+            @Value( "${public-key-pem-file:#{null}}" ) String publicKeyPemFile,
+            ObjectMapper objectMapper
+    )
+            throws GeneralSecurityException, IOException {
+        this.objectMapper = objectMapper;
+        loadPublicKey( publicKeyPemFileOrDefault( publicKeyPemFile ) );
     }
 
-    private void loadPublicKey() throws GeneralSecurityException, IOException {
+    private String publicKeyPemFileOrDefault( String publicKeyPemFile ) {
+        return Optional.ofNullable( publicKeyPemFile ).orElse(
+                Resources.getResource( RSA_PUBLIC_RESOURCE_PATH ).getFile()
+        );
+    }
+
+    private void loadPublicKey( final String publicKeyPemFile ) throws GeneralSecurityException, IOException {
         try ( FileReader keyReader = new FileReader( publicKeyPemFile ) ) {
             PemReader pemReader = new PemReader( keyReader );
             PemObject pemObject = pemReader.readPemObject();

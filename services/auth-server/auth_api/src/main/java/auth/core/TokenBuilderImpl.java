@@ -10,8 +10,12 @@ import java.security.GeneralSecurityException;
 
 @Component
 public class TokenBuilderImpl implements TokenBuilder {
+    private final ObjectEncryption objectEncryption;
+
     @Autowired
-    private ObjectEncryption objectEncryption;
+    public TokenBuilderImpl( ObjectEncryption objectEncryption ) {
+        this.objectEncryption = objectEncryption;
+    }
 
     @Override
     public String generate(User user) throws TokenGenerationException {

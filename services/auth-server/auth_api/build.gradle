@@ -13,6 +13,9 @@ dependencies {
     implementation 'com.google.guava:guava:31.1-jre'
 
     runtimeOnly 'mysql:mysql-connector-java'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.6.7'
+    testRuntimeOnly 'com.h2database:h2:2.1.212'
 }
 
 application {

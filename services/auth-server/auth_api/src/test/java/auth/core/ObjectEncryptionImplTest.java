@@ -18,15 +18,15 @@ import static org.hamcrest.Matchers.hasItems;
 public class ObjectEncryptionImplTest {
     private static final String RSA_PRIVATE_RESOURCE_PATH = "core/rsa.private";
     private static final String RSA_PUBLIC_RESOURCE_PATH = "core/rsa.public";
-    private static final String publicKeyPemFile = Resources.getResource( RSA_PUBLIC_RESOURCE_PATH ).getFile();
-    private static final String privateKeyPemFile = Resources.getResource( RSA_PRIVATE_RESOURCE_PATH ).getFile();
+    private static final String PUBLIC_KEY_PEM_FILE = Resources.getResource( RSA_PUBLIC_RESOURCE_PATH ).getFile();
+    private static final String PRIVATE_KEY_PEM_FILE = Resources.getResource( RSA_PRIVATE_RESOURCE_PATH ).getFile();
 
     private ObjectEncryptionImpl getEncryptionSut() throws Exception {
-        return new ObjectEncryptionImpl( publicKeyPemFile, new ObjectMapper());
+        return new ObjectEncryptionImpl( PUBLIC_KEY_PEM_FILE, new ObjectMapper() );
     }
 
     private ObjectDecryptionImpl getDecryptionSut() throws Exception {
-        return new ObjectDecryptionImpl( privateKeyPemFile, new ObjectMapper() );
+        return new ObjectDecryptionImpl( PRIVATE_KEY_PEM_FILE, new ObjectMapper() );
     }
 
     @BeforeEach
@@ -35,7 +35,7 @@ public class ObjectEncryptionImplTest {
     }
 
     @Test
-    public void testEncrypt_SimpleInput() throws Exception {
+    public void encrypt_SimpleObjectToEncrypt_ReturnSameObject() throws Exception {
         // Setup
         ObjectEncryptionImpl encryptionSut = getEncryptionSut();
         ObjectDecryptionImpl decryptionSut = getDecryptionSut();
@@ -47,7 +47,7 @@ public class ObjectEncryptionImplTest {
         TokenDto decryptedObject = decryptionSut.decrypt( encryptedMessage, TokenDto.class );
 
         // Assert
-      assertThat( decryptedObject.getUser(), equalTo( "test" ) );
-      assertThat( decryptedObject.getClaims(), hasItems( "claimTest1", "claimTest2" ) );
+        assertThat( decryptedObject.getUser(), equalTo( "test" ) );
+        assertThat( decryptedObject.getClaims(), hasItems( "claimTest1", "claimTest2" ) );
     }
 }

@@ -1,5 +1,6 @@
 package auth.core;
 
+import auth.entities.Claim;
 import auth.entities.User;
 import auth.shared.dto.TokenDto;
 import auth.shared.exceptions.TokenGenerationException;
@@ -7,6 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.security.GeneralSecurityException;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 public class TokenBuilderImpl implements TokenBuilder {
@@ -20,6 +25,14 @@ public class TokenBuilderImpl implements TokenBuilder {
     @Override
     public String generate(User user) throws TokenGenerationException {
         TokenDto tokenDto = new TokenDto();
+        tokenDto.setUser( user.getName() );
+        tokenDto.setClaims(
+                Optional.ofNullable(user.getClaims())
+                        .stream()
+                        .flatMap( Collection::stream )
+                        .map( Claim::getDescription )
+                        .collect( Collectors.toList() )
+        );
         try {
             return objectEncryption.encrypt( tokenDto );
         } catch ( GeneralSecurityException exc ) {

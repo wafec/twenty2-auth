@@ -19,12 +19,10 @@ import static org.mockito.Mockito.when;
 @ExtendWith( MockitoExtension.class )
 public class TokenBuilderImplTest {
     @Mock
-    private ObjectEncryption objectEncryption;
-    @Mock
     private User user;
 
     private TokenBuilderImpl getSut() {
-        return new TokenBuilderImpl( objectEncryption );
+        return null;
     }
 
     private static Stream<List<Claim>> provideClaims() {

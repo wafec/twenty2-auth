@@ -1,17 +1,16 @@
-package auth.shared.dto;
+package auth.shared.dto.jwt;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class TokenDto {
-    private String user;
-    private List<String> claims;
+public class JwtHeaderDto {
+    private String signAlg;
+    private String hashAlg;
+    private String type;
 }

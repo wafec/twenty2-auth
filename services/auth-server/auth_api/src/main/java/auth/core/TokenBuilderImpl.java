@@ -1,42 +1,52 @@
 package auth.core;
 
-import auth.entities.Claim;
 import auth.entities.User;
-import auth.shared.dto.TokenDto;
+import auth.exceptions.ObjectHashGeneratorException;
+import auth.shared.dto.jwt.JwtHeaderDto;
+import auth.shared.dto.jwt.JwtPayloadDto;
 import auth.shared.exceptions.TokenGenerationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.GeneralSecurityException;
-import java.util.Collection;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Component
 public class TokenBuilderImpl implements TokenBuilder {
-    private final ObjectEncryption objectEncryption;
+    private final SignatureGenerator signatureGenerator;
+    private final ObjectHashGeneratorFactory objectHashGeneratorFactory;
+    private final String signatureAlgorithm;
+
+    public static final String JWT_HEADER_TYPE = "jwt";
 
     @Autowired
-    public TokenBuilderImpl( ObjectEncryption objectEncryption ) {
-        this.objectEncryption = objectEncryption;
+    public TokenBuilderImpl( SignatureGenerator signatureGenerator,
+                            ObjectHashGeneratorFactory objectHashGeneratorFactory,
+                            @Value( "${token-builder-signature-algorithm:RSA}" ) String signatureAlgorithm ) {
+        this.signatureGenerator = signatureGenerator;
+        this.objectHashGeneratorFactory = objectHashGeneratorFactory;
+        this.signatureAlgorithm = signatureAlgorithm;
     }
 
     @Override
-    public String generate(User user) throws TokenGenerationException {
-        TokenDto tokenDto = new TokenDto();
-        tokenDto.setUser( user.getName() );
-        tokenDto.setClaims(
-                Optional.ofNullable(user.getClaims())
-                        .stream()
-                        .flatMap( Collection::stream )
-                        .map( Claim::getDescription )
-                        .collect( Collectors.toList() )
-        );
+    public String generate( User user ) throws TokenGenerationException {
+        JwtHeaderDto jwtHeaderDto = new JwtHeaderDto();
+        JwtPayloadDto jwtPayloadDto = new JwtPayloadDto();
         try {
-            return objectEncryption.encrypt( tokenDto );
-        } catch ( GeneralSecurityException exc ) {
-            throw new TokenGenerationException();
+            ObjectHashGenerator hashGeneratorHeaderDto = objectHashGeneratorFactory.build( jwtHeaderDto );
+            ObjectHashGenerator hashGeneratorPayloadDto = objectHashGeneratorFactory.build( jwtPayloadDto );
+            jwtHeaderDto.setSignAlg( signatureAlgorithm );
+            jwtHeaderDto.setHashAlg( objectHashGeneratorFactory.algorithm() );
+            jwtHeaderDto.setType( JWT_HEADER_TYPE );
+            jwtPayloadDto.setName( user.getName() );
+            String digitalSignature = signatureGenerator.signObject( jwtHeaderDto.getSignAlg(), hashGeneratorPayloadDto );
+            return String.format( "%s.%s.%s",
+                    hashGeneratorHeaderDto.jsonBase64(),
+                    hashGeneratorPayloadDto.jsonBase64(),
+                    digitalSignature
+            );
+        } catch ( GeneralSecurityException | ObjectHashGeneratorException exc ) {
+            throw new TokenGenerationException( exc );
         }
     }
 }

@@ -1,6 +1,6 @@
-package auth.dao;
+package auth.api.dao;
 
-import auth.entities.User;
+import auth.api.entities.User;
 import org.springframework.data.repository.CrudRepository;
 
 public interface UserDao extends CrudRepository<User, Long> {

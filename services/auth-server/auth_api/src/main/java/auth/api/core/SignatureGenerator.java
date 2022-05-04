@@ -1,4 +1,4 @@
-package auth.core;
+package auth.api.core;
 
 import java.security.GeneralSecurityException;
 

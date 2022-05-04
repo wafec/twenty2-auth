@@ -1,4 +1,4 @@
-package auth.core;
+package auth.api.core;
 
 public interface ObjectHashGenerator {
     String jsonObject();

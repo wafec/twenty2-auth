@@ -1,6 +1,7 @@
-package auth.dao;
+package auth.api.dao;
 
-import auth.entities.User;
+import auth.api.dao.UserDao;
+import auth.api.entities.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

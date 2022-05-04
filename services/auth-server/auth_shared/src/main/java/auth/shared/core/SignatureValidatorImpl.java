@@ -4,15 +4,19 @@ import auth.shared.dto.jwt.JwtHeaderDto;
 import auth.shared.dto.jwt.JwtPayloadDto;
 import auth.shared.exceptions.ObjectHashParserException;
 import auth.shared.exceptions.SignatureValidatorException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.Cipher;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
 import java.util.Base64;
 
+@Component
 public class SignatureValidatorImpl implements SignatureValidator {
     private final PublicKeyManager publicKeyManager;
 
+    @Autowired
     public SignatureValidatorImpl( PublicKeyManager publicKeyManager ) {
         this.publicKeyManager = publicKeyManager;
     }

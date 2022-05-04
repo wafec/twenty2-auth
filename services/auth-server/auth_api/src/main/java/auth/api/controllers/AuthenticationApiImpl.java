@@ -1,8 +1,8 @@
-package auth.api;
+package auth.api.controllers;
 
-import auth.core.TokenBuilder;
-import auth.dao.UserDao;
-import auth.entities.User;
+import auth.api.core.TokenBuilder;
+import auth.api.dao.UserDao;
+import auth.api.entities.User;
 import auth.shared.api.AuthenticationApi;
 import auth.shared.dto.UserAndPasswordDto;
 import auth.shared.exceptions.TokenGenerationException;

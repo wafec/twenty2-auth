@@ -1,7 +1,7 @@
-package auth.core;
+package auth.api.core;
 
-import auth.entities.User;
-import auth.exceptions.ObjectHashGeneratorException;
+import auth.api.entities.User;
+import auth.api.exceptions.ObjectHashGeneratorException;
 import auth.shared.dto.jwt.JwtHeaderDto;
 import auth.shared.dto.jwt.JwtPayloadDto;
 import auth.shared.exceptions.TokenGenerationException;
@@ -18,27 +18,44 @@ public class TokenBuilderImpl implements TokenBuilder {
     private final String signatureAlgorithm;
 
     public static final String JWT_HEADER_TYPE = "jwt";
+    public static final String TOKEN_BUILDER_SIGNATURE_ALGORITHM_DEFAULT = "RSA";
+    public static final String TOKEN_BUILDER_SIGNATURE_ALGORITHM_PROPERTY = "${token-builder-signature-algorithm:" +
+            TOKEN_BUILDER_SIGNATURE_ALGORITHM_DEFAULT + "}";
 
     @Autowired
     public TokenBuilderImpl( SignatureGenerator signatureGenerator,
                             ObjectHashGeneratorFactory objectHashGeneratorFactory,
-                            @Value( "${token-builder-signature-algorithm:RSA}" ) String signatureAlgorithm ) {
+                            @Value( TOKEN_BUILDER_SIGNATURE_ALGORITHM_PROPERTY ) String signatureAlgorithm ) {
         this.signatureGenerator = signatureGenerator;
         this.objectHashGeneratorFactory = objectHashGeneratorFactory;
         this.signatureAlgorithm = signatureAlgorithm;
     }
 
+    private JwtHeaderDto newHeader() {
+        JwtHeaderDto jwtHeaderDto = new JwtHeaderDto();
+
+        jwtHeaderDto.setSignAlg( signatureAlgorithm );
+        jwtHeaderDto.setHashAlg( objectHashGeneratorFactory.algorithm() );
+        jwtHeaderDto.setType( JWT_HEADER_TYPE );
+
+        return jwtHeaderDto;
+    }
+
+    private JwtPayloadDto newPayload( User user ) {
+        JwtPayloadDto jwtPayloadDto = new JwtPayloadDto();
+
+        jwtPayloadDto.setName( user.getName() );
+
+        return jwtPayloadDto;
+    }
+
     @Override
     public String generate( User user ) throws TokenGenerationException {
-        JwtHeaderDto jwtHeaderDto = new JwtHeaderDto();
-        JwtPayloadDto jwtPayloadDto = new JwtPayloadDto();
+        JwtHeaderDto jwtHeaderDto = newHeader();
+        JwtPayloadDto jwtPayloadDto = newPayload( user );
         try {
-            ObjectHashGenerator hashGeneratorHeaderDto = objectHashGeneratorFactory.build( jwtHeaderDto );
+            ObjectHashGenerator hashGeneratorHeaderDto = objectHashGeneratorFactory.build( newHeader() );
             ObjectHashGenerator hashGeneratorPayloadDto = objectHashGeneratorFactory.build( jwtPayloadDto );
-            jwtHeaderDto.setSignAlg( signatureAlgorithm );
-            jwtHeaderDto.setHashAlg( objectHashGeneratorFactory.algorithm() );
-            jwtHeaderDto.setType( JWT_HEADER_TYPE );
-            jwtPayloadDto.setName( user.getName() );
             String digitalSignature = signatureGenerator.signObject( jwtHeaderDto.getSignAlg(), hashGeneratorPayloadDto );
             return String.format( "%s.%s.%s",
                     hashGeneratorHeaderDto.jsonBase64(),

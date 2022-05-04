@@ -1,7 +1,8 @@
-package auth.core;
+package auth.api.core;
 
-import auth.entities.Claim;
-import auth.entities.User;
+import auth.api.core.TokenBuilderImpl;
+import auth.api.entities.Claim;
+import auth.api.entities.User;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;

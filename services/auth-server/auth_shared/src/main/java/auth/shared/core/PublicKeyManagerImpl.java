@@ -3,6 +3,8 @@ package auth.shared.core;
 import com.google.common.io.Resources;
 import org.bouncycastle.util.io.pem.PemObject;
 import org.bouncycastle.util.io.pem.PemReader;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.FileReader;
@@ -14,14 +16,20 @@ import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Optional;
 
+@Component
 public class PublicKeyManagerImpl implements PublicKeyManager {
     private final String publicKeyPemFile;
     private final String publicKeyPemFileAlgorithm;
     private String publicKeyString;
     private PublicKey publicKey;
 
-    public PublicKeyManagerImpl(String publicKeyPemFile,
-                                String publicKeyPemFileAlgorithm )
+    public static final String PUBLIC_KEY_PEM_FILE_PROPERTY = "${public-key-pem-file:#{null}}";
+    public static final String PUBLIC_KEY_PEM_FILE_ALGORITHM_DEFAULT = "RSA";
+    public static final String PUBLIC_KEY_PEM_FILE_ALGORITHM_PROPERTY = "${public-key-pem-file-algorithm:" +
+            PUBLIC_KEY_PEM_FILE_ALGORITHM_DEFAULT + "}";
+
+    public PublicKeyManagerImpl( @Value( PUBLIC_KEY_PEM_FILE_PROPERTY ) String publicKeyPemFile,
+                                 @Value( PUBLIC_KEY_PEM_FILE_ALGORITHM_PROPERTY ) String publicKeyPemFileAlgorithm )
             throws GeneralSecurityException, IOException {
         this.publicKeyPemFile = publicKeyPemFile;
         this.publicKeyPemFileAlgorithm = publicKeyPemFileAlgorithm;

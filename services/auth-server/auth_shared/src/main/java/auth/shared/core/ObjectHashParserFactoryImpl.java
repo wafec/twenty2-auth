@@ -2,10 +2,14 @@ package auth.shared.core;
 
 import auth.shared.exceptions.ObjectHashParserException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ObjectHashParserFactoryImpl implements ObjectHashParserFactory {
     private final ObjectMapper objectMapper;
 
+    @Autowired
     public ObjectHashParserFactoryImpl( ObjectMapper objectMapper ) {
         this.objectMapper = objectMapper;
     }

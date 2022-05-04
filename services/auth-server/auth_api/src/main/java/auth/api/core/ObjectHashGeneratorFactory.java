@@ -1,6 +1,6 @@
-package auth.core;
+package auth.api.core;
 
-import auth.exceptions.ObjectHashGeneratorException;
+import auth.api.exceptions.ObjectHashGeneratorException;
 
 public interface ObjectHashGeneratorFactory {
     ObjectHashGenerator build( Object objInstance ) throws ObjectHashGeneratorException;

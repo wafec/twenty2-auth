@@ -1,4 +1,4 @@
-package auth.api;
+package auth.api.controllers;
 
 import auth.shared.core.PublicKeyManager;
 import auth.shared.api.SignatureApi;

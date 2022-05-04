@@ -1,6 +1,6 @@
-package auth.core;
+package auth.api.core;
 
-import auth.exceptions.ObjectHashGeneratorException;
+import auth.api.exceptions.ObjectHashGeneratorException;
 import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -30,7 +30,8 @@ public class ObjectHashGeneratorImpl implements ObjectHashGenerator {
             MessageDigest messageDigest = MessageDigest.getInstance( algorithm );
             jsonObject = objectMapper.writeValueAsString( objInstance );
             byte[] jsonObjectBytes = jsonObject.getBytes( StandardCharsets.UTF_8 );
-            jsonBase64 = Base64.getEncoder().encodeToString( jsonObjectBytes );
+            jsonBase64 = Base64.getEncoder().encodeToString( jsonObjectBytes )
+                    .replaceFirst( "=+$", "" );
             jsonHash = messageDigest.digest( jsonObjectBytes );
         } catch ( JacksonException | GeneralSecurityException exc ) {
             throw new ObjectHashGeneratorException( exc );

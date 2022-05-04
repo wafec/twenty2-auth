@@ -1,6 +1,6 @@
-package auth.core;
+package auth.api.core;
 
-import auth.exceptions.ObjectHashGeneratorException;
+import auth.api.exceptions.ObjectHashGeneratorException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,9 +11,13 @@ public class ObjectHashGeneratorFactoryImpl implements ObjectHashGeneratorFactor
     private final ObjectMapper objectMapper;
     private final String algorithm;
 
+    public static final String OBJECT_HASH_GENERATOR_ALGORITHM_DEFAULT = "SHA-256";
+    public static final String OBJECT_HASH_GENERATOR_ALGORITHM_PROPERTY = "${object-hash-generator-algorithm:" +
+            OBJECT_HASH_GENERATOR_ALGORITHM_DEFAULT + "}";
+
     @Autowired
     public ObjectHashGeneratorFactoryImpl( ObjectMapper objectMapper,
-                                           @Value( "${object-hash-generator-algorithm:$null}" ) String algorithm ) {
+                                           @Value( OBJECT_HASH_GENERATOR_ALGORITHM_PROPERTY ) String algorithm ) {
         this.objectMapper = objectMapper;
         this.algorithm = algorithm;
     }

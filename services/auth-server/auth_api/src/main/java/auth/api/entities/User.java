@@ -1,4 +1,4 @@
-package auth.entities;
+package auth.api.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

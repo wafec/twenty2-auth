@@ -1,4 +1,4 @@
-package auth.core;
+package auth.api.core;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,6 +20,7 @@ public class SignatureGeneratorImpl implements SignatureGenerator {
     public String signObject(String alg, ObjectHashGenerator hashGenerator) throws GeneralSecurityException {
         Cipher cipher = Cipher.getInstance( alg );
         cipher.init( Cipher.ENCRYPT_MODE, privateKeyManager.privateKey() );
-        return Base64.getEncoder().encodeToString( cipher.doFinal( hashGenerator.hash() ) );
+        return Base64.getEncoder().encodeToString( cipher.doFinal( hashGenerator.hash() ) )
+                .replaceFirst( "=+$", "" );
     }
 }

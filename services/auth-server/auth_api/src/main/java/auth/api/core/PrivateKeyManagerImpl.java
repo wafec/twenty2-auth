@@ -1,4 +1,4 @@
-package auth.core;
+package auth.api.core;
 
 import com.google.common.io.Resources;
 import org.bouncycastle.util.io.pem.PemObject;
@@ -23,8 +23,13 @@ public class PrivateKeyManagerImpl implements PrivateKeyManager {
     private String privateKeyString;
     private PrivateKey privateKey;
 
-    public PrivateKeyManagerImpl( @Value( "${private-key-pem-file:#null}" ) String privateKeyPemFile,
-                                  @Value( "${private-key-pem-file-algorithm:#null" ) String privateKeyPemFileAlgorithm )
+    public static final String PRIVATE_KEY_PEM_FILE_ALGORITHM_DEFAULT = "RSA";
+    public static final String PRIVATE_KEY_PEM_FILE_PROPERTY = "${private-key-pem-file:#{null}}";
+    public static final String PRIVATE_KEY_PEM_FILE_ALGORITHM_PROPERTY = "${private-key-pem-file-algorithm:" +
+            PRIVATE_KEY_PEM_FILE_ALGORITHM_DEFAULT + "}";
+
+    public PrivateKeyManagerImpl( @Value( PRIVATE_KEY_PEM_FILE_PROPERTY ) String privateKeyPemFile,
+                                  @Value( PRIVATE_KEY_PEM_FILE_ALGORITHM_PROPERTY ) String privateKeyPemFileAlgorithm )
             throws IOException, GeneralSecurityException {
         this.privateKeyPemFile = privateKeyPemFile;
         this.privateKeyPemFileAlgorithm = privateKeyPemFileAlgorithm;

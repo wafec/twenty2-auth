@@ -1,4 +1,4 @@
-package auth.exceptions;
+package auth.api.exceptions;
 
 import lombok.NoArgsConstructor;
 

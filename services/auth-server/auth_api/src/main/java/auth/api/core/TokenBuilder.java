@@ -1,6 +1,6 @@
-package auth.core;
+package auth.api.core;
 
-import auth.entities.User;
+import auth.api.entities.User;
 import auth.shared.exceptions.TokenGenerationException;
 
 public interface TokenBuilder {

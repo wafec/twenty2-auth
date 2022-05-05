@@ -3,8 +3,8 @@ package auth.shared.exceptions;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-public class TokenGenerationException extends Exception {
-    public TokenGenerationException( Exception innerException ) {
+public class TokenParserException extends Exception {
+    public TokenParserException( Exception innerException ) {
         super( innerException );
     }
 }

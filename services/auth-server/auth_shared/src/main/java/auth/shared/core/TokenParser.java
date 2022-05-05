@@ -1,7 +1,10 @@
 package auth.shared.core;
 
-import auth.shared.dto.TokenDto;
+import auth.shared.dto.jwt.JwtHeaderDto;
+import auth.shared.dto.jwt.JwtPayloadDto;
 
 public interface TokenParser {
-    TokenDto parse( String token );
+    JwtHeaderDto header();
+
+    JwtPayloadDto payload();
 }

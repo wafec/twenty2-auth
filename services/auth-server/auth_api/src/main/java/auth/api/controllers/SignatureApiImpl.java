@@ -3,7 +3,6 @@ package auth.api.controllers;
 import auth.shared.core.BearerParser;
 import auth.shared.core.PublicKeyManager;
 import auth.shared.api.SignatureApi;
-import auth.shared.core.TokenParser;
 import auth.shared.core.TokenParserFactory;
 import auth.shared.dto.jwt.BearerDto;
 import auth.shared.dto.jwt.JwtPayloadDto;
@@ -39,8 +38,8 @@ public class SignatureApiImpl implements SignatureApi {
 
     @Override
     @GetMapping( "/validate" )
-    @Secured( "System.Viewer" )
-    public JwtPayloadDto validate(@RequestHeader( "Authorization" ) String authorization )
+    @Secured( SIGNATURE_RESOURCE_READ_PERMISSION )
+    public JwtPayloadDto validate( @RequestHeader( "Authorization" ) String authorization )
             throws TokenParserException {
         BearerDto bearerDto = bearerParser.parse( authorization );
         return tokenParserFactory.build( bearerDto.getContent() )

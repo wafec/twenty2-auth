@@ -9,7 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 import java.security.Security;
 
 @SpringBootApplication
-@ComponentScan( basePackages = { "auth.api", "auth.shared" } )
+@ComponentScan( basePackages = { "auth.api", "auth.shared", "auth.security" } )
 @EntityScan( "auth.api.entities" )
 public class Startup {
     public static void main(String[] args) {

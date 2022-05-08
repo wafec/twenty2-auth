@@ -2,3 +2,5 @@
 rootProject.name = 'auth-server'
 include 'auth_api'
 include 'auth_shared'
+include 'auth_security'
+

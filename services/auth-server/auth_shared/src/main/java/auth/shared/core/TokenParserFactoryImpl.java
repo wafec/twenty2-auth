@@ -8,16 +8,19 @@ import org.springframework.stereotype.Component;
 public class TokenParserFactoryImpl implements TokenParserFactory {
     private final ObjectHashParserFactory objectHashParserFactory;
     private final SignatureValidator signatureValidator;
+    private final BearerParser bearerParser;
 
     @Autowired
     public TokenParserFactoryImpl( ObjectHashParserFactory objectHashParserFactory,
-                                   SignatureValidator signatureValidator ) {
+                                   SignatureValidator signatureValidator,
+                                   BearerParser bearerParser ) {
         this.objectHashParserFactory = objectHashParserFactory;
         this.signatureValidator = signatureValidator;
+        this.bearerParser = bearerParser;
     }
 
     @Override
     public TokenParser build(String token) throws TokenParserException {
-        return new TokenParserImpl( token, objectHashParserFactory, signatureValidator );
+        return new TokenParserImpl( token, objectHashParserFactory, signatureValidator, bearerParser );
     }
 }

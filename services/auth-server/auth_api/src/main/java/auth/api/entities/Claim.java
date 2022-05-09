@@ -23,7 +23,7 @@ public class Claim {
     @Id
     @GeneratedValue( strategy = GenerationType.AUTO )
     private Long id;
-    private String description;
+    private String value;
     @ManyToOne
     @JoinColumn( name = "user_id", nullable = false )
     private User user;

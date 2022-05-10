@@ -2,6 +2,8 @@ package auth.api.dao;
 
 import auth.api.entities.Account;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
-public interface AccountDao extends CrudRepository<Long, Account> {
+@Repository
+public interface AccountDao extends CrudRepository<Account, Long> {
 }

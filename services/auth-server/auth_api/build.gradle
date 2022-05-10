@@ -12,11 +12,14 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.6.4'
     implementation 'joda-time:joda-time:2.10.14'
     implementation 'org.springframework.security:spring-security-core:5.6.3'
+    implementation 'org.mapstruct:mapstruct:1.4.2.Final'
 
     runtimeOnly 'mysql:mysql-connector-java'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test:2.6.7'
     testRuntimeOnly 'com.h2database:h2:2.1.212'
+
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
 }
 
 application {

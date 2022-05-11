@@ -10,6 +10,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserSignUpDto {
-    private String username;
+    private String name;
     private String password;
 }

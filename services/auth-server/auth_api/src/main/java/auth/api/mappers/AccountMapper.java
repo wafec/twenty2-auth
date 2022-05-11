@@ -9,7 +9,7 @@ import org.mapstruct.MappingTarget;
 
 import static org.mapstruct.NullValuePropertyMappingStrategy.IGNORE;
 
-@Mapper
+@Mapper( componentModel = "spring" )
 public interface AccountMapper {
     Account map( AccountDetailsDto source );
     AccountDto map( Account source );

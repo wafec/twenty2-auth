@@ -4,12 +4,13 @@ import auth.api.dao.AccountDao;
 import auth.api.dao.UserDao;
 import auth.api.entities.Account;
 import auth.api.entities.User;
+import auth.api.exceptions.AccountNotFoundApiException;
 import auth.api.mappers.AccountMapper;
 import auth.api.mappers.UserMapper;
 import auth.shared.dto.AccountCreationDto;
 import auth.shared.api.AccountApi;
 import auth.shared.dto.AccountDto;
-import auth.shared.dto.AccountDetailsDto;
+import auth.shared.dto.PersonalInfoDto;
 import auth.shared.dto.UserSignUpDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
@@ -20,6 +21,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
+import java.util.Objects;
 
 @RestController
 @RequestMapping( "/account" )
@@ -44,8 +48,8 @@ public class AccountApiImpl implements AccountApi {
     @Override
     @PostMapping( "/create" )
     @Transactional
-    public AccountDto create( @RequestBody AccountCreationDto accountCreationDto ) {
-        Account account = accountMapper.map( accountCreationDto.getDetails() );
+    public AccountDto create( @Valid @RequestBody AccountCreationDto accountCreationDto ) {
+        Account account = accountMapper.map( accountCreationDto.getPersonalInfo() );
         User user = userMapper.map( accountCreationDto.getUser() );
 
         userDao.save( user );
@@ -58,8 +62,8 @@ public class AccountApiImpl implements AccountApi {
     @Override
     @PutMapping( "/update-account/{id}" )
     @Secured( ACCOUNT_RESOURCE_WRITE_PERMISSION )
-    public AccountDto update( @PathVariable( "id" ) Long id, @RequestBody AccountDetailsDto accountDto ) {
-        Account account = accountDao.findById( id ).orElseThrow();
+    public AccountDto update( @PathVariable( "id" ) Long id, @Valid @RequestBody PersonalInfoDto accountDto ) {
+        Account account = accountDao.findById( id ).orElseThrow( AccountNotFoundApiException::new );
 
         accountMapper.map( accountDto, account );
         accountDao.save( account );
@@ -70,9 +74,13 @@ public class AccountApiImpl implements AccountApi {
     @Override
     @PutMapping( "/update-password/{id}" )
     @Secured( ACCOUNT_RESOURCE_WRITE_PERMISSION )
-    public AccountDto updatePassword( @PathVariable( "id" ) Long id, @RequestBody UserSignUpDto userSignUpDto ) {
-        Account account = accountDao.findById( id ).orElseThrow();
+    public AccountDto updatePassword( @PathVariable( "id" ) Long id, @Valid @RequestBody UserSignUpDto userSignUpDto ) {
+        Account account = accountDao.findById( id ).orElseThrow( AccountNotFoundApiException::new );
         User user = account.getUser();
+
+        if ( !Objects.equals( user.getName(), userSignUpDto.getName() ) ) {
+            throw new AccountNotFoundApiException();
+        }
 
         userMapper.map( userSignUpDto, user );
         userDao.save( user );

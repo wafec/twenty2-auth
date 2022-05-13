@@ -1,5 +1,6 @@
 package auth.api.core;
 
+import auth.api.entities.Claim;
 import auth.api.entities.User;
 import auth.api.exceptions.ObjectHashGeneratorException;
 import auth.shared.dto.jwt.JwtHeaderDto;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.GeneralSecurityException;
+import java.util.stream.Collectors;
 
 @Component
 public class TokenBuilderImpl implements TokenBuilder {
@@ -45,6 +47,7 @@ public class TokenBuilderImpl implements TokenBuilder {
         JwtPayloadDto jwtPayloadDto = new JwtPayloadDto();
 
         jwtPayloadDto.setName( user.getName() );
+        jwtPayloadDto.setClaims( user.getClaims().stream().map( Claim::getValue ).collect( Collectors.toList() ) );
 
         return jwtPayloadDto;
     }

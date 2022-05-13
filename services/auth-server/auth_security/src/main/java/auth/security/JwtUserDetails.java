@@ -5,7 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.stream.Collectors;
 
 public class JwtUserDetails implements UserDetails {
     private final JwtPayloadDto jwtPayloadDto;
@@ -16,12 +16,7 @@ public class JwtUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new GrantedAuthority() {
-            @Override
-            public String getAuthority() {
-                return "System.Viewer";
-            }
-        });
+        return this.jwtPayloadDto.getClaims().stream().map( ClaimedAuthorityImpl::new ).collect( Collectors.toList() );
     }
 
     @Override

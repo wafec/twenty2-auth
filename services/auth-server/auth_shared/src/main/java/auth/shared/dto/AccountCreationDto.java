@@ -10,6 +10,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class AccountCreationDto {
-    private AccountDetailsDto details;
+    private PersonalInfoDto personalInfo;
     private UserSignUpDto user;
 }

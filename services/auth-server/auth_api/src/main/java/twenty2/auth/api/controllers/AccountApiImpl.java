@@ -62,7 +62,7 @@ public class AccountApiImpl implements AccountApi {
     @Override
     @PutMapping( "/update-account/{id}" )
     @Secured( ACCOUNT_RESOURCE_WRITE_PERMISSION )
-    public AccountDto update( @PathVariable( "id" ) Long id, @Valid @RequestBody PersonalInfoDto accountDto )
+    public AccountDto updateAccount( @PathVariable( "id" ) Long id, @Valid @RequestBody PersonalInfoDto accountDto )
             throws AccountNotFoundApiException {
         Account account = accountDao.findById( id ).orElseThrow( AccountNotFoundApiException::new );
 

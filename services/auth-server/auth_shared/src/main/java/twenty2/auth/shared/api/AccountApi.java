@@ -11,6 +11,6 @@ public interface AccountApi {
     String ACCOUNT_RESOURCE_WRITE_PERMISSION = ACCOUNT_RESOURCE_PREFIX + ".write";
 
     AccountDto create(AccountCreationDto accountCreation );
-    AccountDto update( Long id, PersonalInfoDto account ) throws AccountNotFoundApiException;
+    AccountDto updateAccount(Long id, PersonalInfoDto account ) throws AccountNotFoundApiException;
     AccountDto updatePassword( Long id, UserSignUpDto userSignUpDto ) throws AccountNotFoundApiException;
 }

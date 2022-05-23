@@ -2,12 +2,10 @@ package twenty2.auth.api.dao;
 
 import twenty2.auth.api.entities.User;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 
 import java.util.Optional;
@@ -18,7 +16,6 @@ import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.nullValue;
 
-@ExtendWith( SpringExtension.class )
 @DataJpaTest
 @EntityScan( "auth.dao" )
 public class UserDaoTest {
@@ -28,7 +25,7 @@ public class UserDaoTest {
     public static final String USER_DAO_TEST_SQL = "classpath:dao/user-dao-test.sql";
 
     @Test
-    @Sql(USER_DAO_TEST_SQL)
+    @Sql( USER_DAO_TEST_SQL )
     public void findByNameAndPassword_UserExists_ReturnUser() {
         // Setup
         // Act

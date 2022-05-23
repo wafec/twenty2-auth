@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.GeneralSecurityException;
+import java.util.Collections;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -47,7 +49,9 @@ public class TokenBuilderImpl implements TokenBuilder {
         JwtPayloadDto jwtPayloadDto = new JwtPayloadDto();
 
         jwtPayloadDto.setName( user.getName() );
-        jwtPayloadDto.setClaims( user.getClaims().stream().map( Claim::getValue ).collect( Collectors.toList() ) );
+        jwtPayloadDto.setClaims( Optional.ofNullable( user.getClaims() )
+                .orElse( Collections.emptyList() )
+                .stream().map( Claim::getValue ).collect( Collectors.toList() ) );
 
         return jwtPayloadDto;
     }

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -21,8 +22,19 @@ public class TokenBuilderImplTest {
     @Mock
     private User user;
 
+    @Mock
+    private SignatureGenerator signatureGenerator;
+
+    @Mock
+    private ObjectHashGeneratorFactory objectHashGeneratorFactory;
+
+    @Mock
+    private ObjectHashGenerator objectHashGenerator;
+
+    private static final String SIGNATURE_ALGORITHM = "RSA";
+
     private TokenBuilderImpl getSut() {
-        return null;
+        return new TokenBuilderImpl( signatureGenerator, objectHashGeneratorFactory, SIGNATURE_ALGORITHM );
     }
 
     private static Stream<List<Claim>> provideClaims() {
@@ -39,6 +51,7 @@ public class TokenBuilderImplTest {
         TokenBuilderImpl sut = getSut();
         when( user.getName() ).thenReturn( "test_user1" );
         when( user.getClaims() ).thenReturn( claims );
+        when( objectHashGeneratorFactory.build( any() ) ).thenReturn( objectHashGenerator );
 
         // Act
         String tokenString = sut.generate( user );

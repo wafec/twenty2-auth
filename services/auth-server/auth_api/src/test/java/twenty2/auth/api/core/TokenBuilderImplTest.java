@@ -54,7 +54,7 @@ public class TokenBuilderImplTest {
         when( objectHashGeneratorFactory.build( any() ) ).thenReturn( objectHashGenerator );
 
         // Act
-        String tokenString = sut.generate( user );
+        String tokenString = sut.generate( user, claims );
 
         // Assert
         verify( user, times( 1 ) ).getName();

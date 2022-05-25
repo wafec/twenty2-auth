@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.security.GeneralSecurityException;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -28,8 +29,8 @@ public class TokenBuilderImpl implements TokenBuilder {
 
     @Autowired
     public TokenBuilderImpl( SignatureGenerator signatureGenerator,
-                            ObjectHashGeneratorFactory objectHashGeneratorFactory,
-                            @Value( TOKEN_BUILDER_SIGNATURE_ALGORITHM_PROPERTY ) String signatureAlgorithm ) {
+                              ObjectHashGeneratorFactory objectHashGeneratorFactory,
+                              @Value( TOKEN_BUILDER_SIGNATURE_ALGORITHM_PROPERTY ) String signatureAlgorithm ) {
         this.signatureGenerator = signatureGenerator;
         this.objectHashGeneratorFactory = objectHashGeneratorFactory;
         this.signatureAlgorithm = signatureAlgorithm;
@@ -45,11 +46,11 @@ public class TokenBuilderImpl implements TokenBuilder {
         return jwtHeaderDto;
     }
 
-    private JwtPayloadDto newPayload( User user ) {
+    private JwtPayloadDto newPayload( User user, List<Claim> claims ) {
         JwtPayloadDto jwtPayloadDto = new JwtPayloadDto();
 
         jwtPayloadDto.setName( user.getName() );
-        jwtPayloadDto.setClaims( Optional.ofNullable( user.getClaims() )
+        jwtPayloadDto.setClaims( Optional.ofNullable( claims )
                 .orElse( Collections.emptyList() )
                 .stream().map( Claim::getValue ).collect( Collectors.toList() ) );
 
@@ -57,9 +58,9 @@ public class TokenBuilderImpl implements TokenBuilder {
     }
 
     @Override
-    public String generate( User user ) throws TokenGenerationException {
+    public String generate( User user, List<Claim> claims ) throws TokenGenerationException {
         JwtHeaderDto jwtHeaderDto = newHeader();
-        JwtPayloadDto jwtPayloadDto = newPayload( user );
+        JwtPayloadDto jwtPayloadDto = newPayload( user, claims );
         try {
             ObjectHashGenerator hashGeneratorHeaderDto = objectHashGeneratorFactory.build( newHeader() );
             ObjectHashGenerator hashGeneratorPayloadDto = objectHashGeneratorFactory.build( jwtPayloadDto );

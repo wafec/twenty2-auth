@@ -1,6 +1,7 @@
 package twenty2.auth.api.controllers;
 
 import twenty2.auth.api.core.TokenBuilder;
+import twenty2.auth.api.dao.ClaimDao;
 import twenty2.auth.api.dao.UserDao;
 import twenty2.auth.api.entities.User;
 import twenty2.auth.shared.api.AuthenticationApi;
@@ -17,14 +18,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthenticationApiImpl implements AuthenticationApi {
     private final UserDao userDao;
     private final TokenBuilder tokenBuilder;
+    private final ClaimDao claimDao;
 
     @Autowired
     public AuthenticationApiImpl(
             UserDao userDao,
-            TokenBuilder tokenBuilder
+            TokenBuilder tokenBuilder,
+            ClaimDao claimDao
     ) {
         this.userDao = userDao;
         this.tokenBuilder = tokenBuilder;
+        this.claimDao = claimDao;
     }
 
     @GetMapping( "/authenticate" )
@@ -37,6 +41,6 @@ public class AuthenticationApiImpl implements AuthenticationApi {
             throw new UserNotFoundException();
         }
 
-        return tokenBuilder.generate( user );
+        return tokenBuilder.generate( user, claimDao.findClaimByUser( user.getId() ) );
     }
 }

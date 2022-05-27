@@ -25,6 +25,6 @@ public class Claim {
     @GeneratedValue( strategy = GenerationType.IDENTITY )
     private Long id;
 
-    @Column( nullable = false, unique = true )
+    @Column( name = "val", nullable = false, unique = true )
     private String value;
 }

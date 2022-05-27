@@ -15,6 +15,6 @@ import java.security.Security;
 public class Startup {
     public static void main(String[] args) {
         Security.addProvider( new BouncyCastleProvider() );
-        SpringApplication.run(Startup.class, args);
+        SpringApplication.run( Startup.class, args );
     }
 }

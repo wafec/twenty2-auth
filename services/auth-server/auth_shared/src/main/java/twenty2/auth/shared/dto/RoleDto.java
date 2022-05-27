@@ -11,10 +11,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class UserDto {
+public class RoleDto {
     private Long id;
     private String name;
-
+    @ToString.Exclude
     private List<ClaimDto> claims;
-    private List<RoleDto> roles;
 }

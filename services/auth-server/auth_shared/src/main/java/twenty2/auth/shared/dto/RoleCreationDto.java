@@ -8,13 +8,11 @@ import lombok.ToString;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @ToString
-public class UserDto {
-    private Long id;
+@AllArgsConstructor
+@NoArgsConstructor
+public class RoleCreationDto {
     private String name;
-
-    private List<ClaimDto> claims;
-    private List<RoleDto> roles;
+    @ToString.Exclude
+    private List<Long> claimIds;
 }

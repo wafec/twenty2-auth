@@ -10,9 +10,9 @@ import twenty2.auth.api.entities.Role;
 public interface RoleDao extends CrudRepository<Role, Long> {
     @Modifying
     @Query( value = "INSERT INTO role_claims ( role_id, claim_id ) VALUES ( ?1, ?2 )", nativeQuery = true )
-    void addClaimToRole( Long roleId, Long claimId );
+    Integer addClaimToRole( Long roleId, Long claimId );
 
     @Modifying
     @Query( value = "DELETE FROM role_claims where role_id = ?1 AND claim_id = ?2", nativeQuery = true )
-    void removeClaimFromRole( Long roleId, Long claimId );
+    Integer removeClaimFromRole( Long roleId, Long claimId );
 }

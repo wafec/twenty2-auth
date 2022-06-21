@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.json.AutoConfigureJson;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.jdbc.Sql;
 import twenty2.auth.api.entities.Role;
+import twenty2.auth.api.extensions.BouncySecurityExtension;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -19,7 +20,7 @@ import static org.hamcrest.Matchers.not;
 @DataJpaTest
 @AutoConfigureJson
 @EntityScan( "twenty2.auth.api.entities" )
-@ExtendWith( DaoTestExtension.class )
+@ExtendWith( BouncySecurityExtension.class )
 public class RoleDaoTest {
     @Autowired
     private RoleDao roleDao;

@@ -25,10 +25,10 @@ public class ObjectHashParserImpl <T> implements ObjectHashParser <T> {
     }
 
     private void initializeComponent() throws ObjectHashParserException {
-        jsonString = new String( Base64.getDecoder().decode( jsonBase64 ) );
         try {
+            jsonString = new String( Base64.getDecoder().decode( jsonBase64 ) );
             objInstance = objectMapper.readValue( jsonString, classType );
-        } catch ( JacksonException exc ) {
+        } catch ( NullPointerException | JacksonException exc  ) {
             throw new ObjectHashParserException( exc );
         }
     }

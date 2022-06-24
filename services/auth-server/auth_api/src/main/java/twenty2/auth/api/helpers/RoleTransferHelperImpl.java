@@ -20,7 +20,7 @@ public class RoleTransferHelperImpl implements RoleTransferHelper {
     }
 
     @Override
-    public RoleDto getRole(Long roleId) throws ResourceNotFoundApiException {
+    public RoleDto getRole( Long roleId ) throws ResourceNotFoundApiException {
         Role role = roleDao.findById( roleId )
                 .orElseThrow( () -> new ResourceNotFoundApiException( Role.class.getSimpleName() ) );
         return roleMapper.map( role );

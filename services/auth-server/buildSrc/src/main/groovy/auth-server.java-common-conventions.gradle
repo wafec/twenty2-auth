@@ -5,10 +5,9 @@ plugins {
 repositories {
     mavenCentral()
     maven {
-        url = uri( "https://maven.pkg.github.com/wafec/twenty2-core" )
-        credentials {
-            username = project.findProperty( "gpr.user" ) ?: System.getenv( "GITHUB_USERNAME" )
-            password = project.findProperty( "gpr.key" ) ?: System.getenv( "GITHUB_TOKEN" )
+        url = uri( "s3://wafec-releases/twenty2/" )
+        authentication {
+            awsIm(AwsImAuthentication)
         }
     }
 }
@@ -22,7 +21,7 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.2.2'
     implementation 'commons-io:commons-io:2.11.0'
     implementation 'com.google.guava:guava:31.1-jre'
-    implementation 'wafec:twenty2-core:1.0.1'
+    implementation 'wafec-twenty2:twenty2-core:1.0.0'
 
     compileOnly 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.projectlombok:lombok:1.18.24'

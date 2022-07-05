@@ -3,4 +3,3 @@ rootProject.name = 'twenty2-auth-server'
 include 'auth_api'
 include 'auth_shared'
 include 'auth_security'
-

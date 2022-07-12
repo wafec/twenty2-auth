@@ -17,7 +17,7 @@ public class SignatureGeneratorImpl implements SignatureGenerator {
     }
 
     @Override
-    public String signObject(String alg, ObjectHashGenerator hashGenerator) throws GeneralSecurityException {
+    public String signObject( String alg, ObjectHashGenerator hashGenerator ) throws GeneralSecurityException {
         Cipher cipher = Cipher.getInstance( alg );
         cipher.init( Cipher.ENCRYPT_MODE, privateKeyManager.privateKey() );
         return Base64.getEncoder().encodeToString( cipher.doFinal( hashGenerator.hash() ) )

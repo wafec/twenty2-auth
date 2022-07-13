@@ -1,44 +1,53 @@
 package twenty2.auth.api.core;
 
-import com.google.common.io.Resources;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import twenty2.auth.api.extensions.BouncySecurityExtension;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import twenty2.auth.api.cryptography.PrivateKeys;
+import twenty2.auth.api.exceptions.CryptographyException;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.security.GeneralSecurityException;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
 import java.security.PrivateKey;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 
-@ExtendWith( BouncySecurityExtension.class )
+@ExtendWith( MockitoExtension.class )
 public class PrivateKeyManagerImplTest {
-    private PrivateKeyManagerImpl sut;
+    @Mock
+    private PrivateKeys privateKeys;
 
-    public static final String PRIVATE_PEM_PATH = "core/private.pem";
+    @Test
+    void whenPrivateKeyIsValid_ShouldHaveAContent() throws Exception {
+        PrivateKey privateKey = generateRandomPrivateKey();
+        when( privateKeys.fromPemFile( any(), any() ) ).thenReturn( privateKey );
 
-    @BeforeEach
-    private void setup() throws GeneralSecurityException, IOException {
-        sut = new PrivateKeyManagerImpl( Resources.getResource( PRIVATE_PEM_PATH ).getFile(), "RSA" );
+        PrivateKeyManagerImpl sut = new PrivateKeyManagerImpl( null, "RSA", privateKeys );
+
+        assertThat( sut.privateKey(), is( notNullValue() ) );
+        assertThat( sut.privateKey(), equalTo( privateKey ) );
+        assertThat( sut.contentString(), is( notNullValue() ) );
+    }
+
+    private PrivateKey generateRandomPrivateKey() throws Exception {
+        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance( "RSA" );
+        keyPairGenerator.initialize( 2048 );
+        KeyPair keyPair = keyPairGenerator.generateKeyPair();
+        return keyPair.getPrivate();
     }
 
     @Test
-    void whenGettingContentString_ShouldReturnPlainText() throws IOException {
-        String result = sut.contentString();
-
-        assertThat( result, equalTo(
-                Files.readString( new File( Resources.getResource( PRIVATE_PEM_PATH ).getPath() ).toPath() ) ) );
-    }
-
-    @Test
-    void whenGettingPrivateKeyInstance_ShouldReturnNonNullObject() {
-        PrivateKey result = sut.privateKey();
-
-        assertThat( result, notNullValue() );
+    void whenPrivateKeyIsInvalid_ShouldThrowAnException() throws Exception {
+        doThrow( CryptographyException.class ).when( privateKeys ).fromPemFile( any(), any() );
+        Assertions.assertThrows( CryptographyException.class, () ->
+                new PrivateKeyManagerImpl( null, "RSA", privateKeys ) );
     }
 }

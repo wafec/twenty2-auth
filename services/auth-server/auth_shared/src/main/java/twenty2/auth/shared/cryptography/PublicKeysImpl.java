@@ -15,7 +15,7 @@ import java.security.spec.X509EncodedKeySpec;
 @Component
 public class PublicKeysImpl implements PublicKeys {
     @Override
-    public PublicKey fromPemFile(String publicKeyPemFile, String publicKeyAlgorithm)
+    public PublicKey fromPemFile( String publicKeyPemFile, String publicKeyAlgorithm )
             throws CryptographyException {
         try( FileReader fileReader = new FileReader( publicKeyPemFile ) ) {
             KeyFactory keyFactory = KeyFactory.getInstance( publicKeyAlgorithm );

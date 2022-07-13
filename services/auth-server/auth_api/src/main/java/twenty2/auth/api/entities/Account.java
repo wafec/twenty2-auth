@@ -1,6 +1,7 @@
 package twenty2.auth.api.entities;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -19,18 +20,19 @@ import javax.persistence.Table;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Account {
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY )
     private Long id;
 
-    @Column( name = "first_name" )
+    @Column( name = "first_name", nullable = false )
     private String firstName;
 
-    @Column( name = "last_name" )
+    @Column( name = "last_name", nullable = false )
     private String lastName;
 
-    @Column ( name = "primary_email" )
+    @Column ( name = "primary_email", nullable = false )
     private String primaryEmail;
 
     @Column( name = "secondary_email" )

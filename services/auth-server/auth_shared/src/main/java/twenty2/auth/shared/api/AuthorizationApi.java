@@ -21,6 +21,6 @@ public interface AuthorizationApi {
     RoleDto removeClaimFromRole( Long roleId, List<Long> claimIds ) throws ResourceNotFoundApiException;
     UserDto addClaimToUser( Long userId, List<Long> claimIds ) throws ResourceNotFoundApiException;
     UserDto removeClaimFromUser( Long userId, List<Long> claimIds ) throws ResourceNotFoundApiException;
-    UserDto addRoleToUser( Long userId, List<Long> claimIds ) throws ResourceNotFoundApiException;
-    UserDto removeRoleFromUser( Long userId, List<Long> claimIds ) throws ResourceNotFoundApiException;
+    UserDto addRoleToUser( Long userId, List<Long> roleIds ) throws ResourceNotFoundApiException;
+    UserDto removeRoleFromUser( Long userId, List<Long> roleIds ) throws ResourceNotFoundApiException;
 }

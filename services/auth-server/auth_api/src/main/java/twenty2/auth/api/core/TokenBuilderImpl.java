@@ -1,16 +1,16 @@
 package twenty2.auth.api.core;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import twenty2.auth.api.entities.Claim;
 import twenty2.auth.api.entities.User;
+import twenty2.auth.api.exceptions.CryptographyException;
 import twenty2.auth.api.exceptions.ObjectHashGeneratorException;
 import twenty2.auth.shared.dto.jwt.JwtHeaderDto;
 import twenty2.auth.shared.dto.jwt.JwtPayloadDto;
 import twenty2.auth.shared.exceptions.TokenGenerationException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
-import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -64,13 +64,14 @@ public class TokenBuilderImpl implements TokenBuilder {
         try {
             ObjectHashGenerator hashGeneratorHeaderDto = objectHashGeneratorFactory.build( newHeader() );
             ObjectHashGenerator hashGeneratorPayloadDto = objectHashGeneratorFactory.build( jwtPayloadDto );
-            String digitalSignature = signatureGenerator.signObject( jwtHeaderDto.getSignAlg(), hashGeneratorPayloadDto );
+            String digitalSignature = signatureGenerator
+                    .signObject( jwtHeaderDto.getSignAlg(), hashGeneratorPayloadDto );
             return String.format( "%s.%s.%s",
                     hashGeneratorHeaderDto.jsonBase64(),
                     hashGeneratorPayloadDto.jsonBase64(),
                     digitalSignature
             );
-        } catch ( GeneralSecurityException | ObjectHashGeneratorException exc ) {
+        } catch ( CryptographyException | ObjectHashGeneratorException exc ) {
             throw new TokenGenerationException( exc );
         }
     }

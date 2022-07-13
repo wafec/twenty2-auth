@@ -1,25 +1,23 @@
 package twenty2.auth.shared.core;
 
 import com.google.common.io.Resources;
-import org.bouncycastle.util.io.pem.PemObject;
-import org.bouncycastle.util.io.pem.PemReader;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import twenty2.auth.shared.cryptography.PublicKeys;
+import twenty2.auth.shared.exceptions.CryptographyException;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.security.GeneralSecurityException;
-import java.security.KeyFactory;
 import java.security.PublicKey;
-import java.security.spec.X509EncodedKeySpec;
+import java.util.Objects;
 import java.util.Optional;
 
 @Component
 public class PublicKeyManagerImpl implements PublicKeyManager {
     private final String publicKeyPemFile;
     private final String publicKeyPemFileAlgorithm;
+    private final PublicKeys publicKeys;
     private String publicKeyString;
     private PublicKey publicKey;
 
@@ -28,24 +26,20 @@ public class PublicKeyManagerImpl implements PublicKeyManager {
     public static final String PUBLIC_KEY_PEM_FILE_ALGORITHM_PROPERTY = "${public-key-pem-file-algorithm:" +
             PUBLIC_KEY_PEM_FILE_ALGORITHM_DEFAULT + "}";
 
-    public PublicKeyManagerImpl( @Value( PUBLIC_KEY_PEM_FILE_PROPERTY ) String publicKeyPemFile,
-                                 @Value( PUBLIC_KEY_PEM_FILE_ALGORITHM_PROPERTY ) String publicKeyPemFileAlgorithm )
-            throws GeneralSecurityException, IOException {
+    public PublicKeyManagerImpl(
+            @Value( PUBLIC_KEY_PEM_FILE_PROPERTY ) String publicKeyPemFile,
+            @Value( PUBLIC_KEY_PEM_FILE_ALGORITHM_PROPERTY ) String publicKeyPemFileAlgorithm,
+            PublicKeys publicKeys )
+            throws CryptographyException, IOException {
         this.publicKeyPemFile = publicKeyPemFile;
         this.publicKeyPemFileAlgorithm = publicKeyPemFileAlgorithm;
+        this.publicKeys = Objects.requireNonNull( publicKeys );
         initializeComponent();
     }
 
-    private void initializeComponent() throws GeneralSecurityException, IOException {
-        KeyFactory keyFactory = KeyFactory.getInstance( publicKeyPemFileAlgorithm );
-        try( FileReader fileReader = new FileReader( publicKeyPemFile() ) ) {
-            PemReader pemReader = new PemReader( fileReader );
-            PemObject pemObject = pemReader.readPemObject();
-            byte[] content = pemObject.getContent();
-            X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec( content );
-            publicKey = keyFactory.generatePublic( publicKeySpec );
-        }
-        publicKeyString = new String(Files.readAllBytes( new File( publicKeyPemFile() ).toPath() ) );
+    private void initializeComponent() throws CryptographyException, IOException {
+        publicKey = publicKeys.fromPemFile( publicKeyPemFile(), publicKeyPemFileAlgorithm );
+        publicKeyString = new String( Files.readAllBytes( new File( publicKeyPemFile() ).toPath() ) );
     }
 
     private String publicKeyPemFile() {

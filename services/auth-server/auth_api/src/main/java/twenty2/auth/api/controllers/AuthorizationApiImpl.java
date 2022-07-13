@@ -126,9 +126,9 @@ public class AuthorizationApiImpl implements AuthorizationApi {
     @Transactional
     @PutMapping( "/add-role-to-user/{id}" )
     @Secured( AUTHORIZATION_RESOURCE_WRITE_PERMISSION )
-    public UserDto addRoleToUser( @PathVariable( "id" ) Long userId, @RequestBody List<Long> claimIds )
+    public UserDto addRoleToUser( @PathVariable( "id" ) Long userId, @RequestBody List<Long> roleIds )
             throws ResourceNotFoundApiException {
-        claimIds.forEach( claimId -> userDao.addRoleToUser( userId, claimId ) );
+        roleIds.forEach( roleId -> userDao.addRoleToUser( userId, roleId ) );
         return userTransferHelper.getUser( userId );
     }
 
@@ -136,9 +136,9 @@ public class AuthorizationApiImpl implements AuthorizationApi {
     @Transactional
     @DeleteMapping( "/remove-role-from-user/{id}" )
     @Secured( AUTHORIZATION_RESOURCE_WRITE_PERMISSION )
-    public UserDto removeRoleFromUser( @PathVariable( "id" ) Long userId, @RequestBody List<Long> claimIds )
+    public UserDto removeRoleFromUser( @PathVariable( "id" ) Long userId, @RequestBody List<Long> roleIds)
             throws ResourceNotFoundApiException {
-        claimIds.forEach( claimId -> userDao.removeRoleFromUser( userId, claimId ) );
+        roleIds.forEach(claimId -> userDao.removeRoleFromUser( userId, claimId ) );
         return userTransferHelper.getUser( userId );
     }
 }

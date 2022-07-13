@@ -1,6 +1,7 @@
 package twenty2.auth.api.entities;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -24,6 +25,7 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 @Table( name = "users" )
+@Builder
 public class User {
     @Id
     @GeneratedValue( strategy = GenerationType.AUTO )
